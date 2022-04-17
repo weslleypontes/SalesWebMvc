@@ -23,6 +23,8 @@ namespace SalesWebMvc.Services
         //metodo para inseir um novo cadastro
         public void Insert(Vendedores obj)
         {
+            //pegar o primeiro elemento do banco de dados e associar com o vendedor
+            obj.Department = _context.Department.First();
             //para inserir
             _context.Add(obj);
             //para confirmar 
