@@ -23,7 +23,7 @@ namespace SalesWebMvc.Controllers
         // IActionResult é o tipo de retorno de todas as ações
         public IActionResult Create()
         {
-            //carregar os deparrtamentos
+            //carregar os departamentos
             var departments = _departmentService.FindAll();
             //instanciar o objeto do nosso View Model
             var viewModel = new VendedorFormViewModel { Departments = departments };
@@ -68,6 +68,21 @@ namespace SalesWebMvc.Controllers
             _vendedoresServices.Remove(id);
             return RedirectToAction(nameof(Index));
                 
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            //pegar esse objeto que eu estou mandando deletar
+            var obj = _vendedoresServices.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
         }
     }
 }
