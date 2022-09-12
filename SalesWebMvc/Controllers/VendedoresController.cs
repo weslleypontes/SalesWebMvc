@@ -46,5 +46,28 @@ namespace SalesWebMvc.Controllers
             // nada no nameof
             return RedirectToAction(nameof(Index));
         }
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            //pegar esse objeto que eu estou mandando deletar
+            var obj = _vendedoresServices.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj); 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _vendedoresServices.Remove(id);
+            return RedirectToAction(nameof(Index));
+                
+        }
     }
 }

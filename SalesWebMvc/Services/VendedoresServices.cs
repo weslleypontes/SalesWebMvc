@@ -25,9 +25,24 @@ namespace SalesWebMvc.Services
         {
             //pegar o primeiro elemento do banco de dados e associar com o vendedor
            // obj.Department = _context.Department.First();
+
             //para inserir
             _context.Add(obj);
             //para confirmar 
+            _context.SaveChanges();
+        }
+        public Vendedores FindById(int id)
+        {
+            return _context.Vendedores.FirstOrDefault(obj => obj.Id == id);
+        }
+
+        public void Remove(int id)
+        {
+            //Primeiro pegar  o objeto
+            var obj =_context.Vendedores.Find(id);
+            //Remover o objeto do DbSte
+            _context.Vendedores.Remove(obj);
+            //Para confirmar o Entity framework e efetivar no banco de dados
             _context.SaveChanges();
         }
     }
