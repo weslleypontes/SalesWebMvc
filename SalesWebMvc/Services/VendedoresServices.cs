@@ -4,6 +4,7 @@ using SalesWebMvc.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Services
 {
@@ -45,6 +46,26 @@ namespace SalesWebMvc.Services
             _context.Vendedores.Remove(obj);
             //Para confirmar o Entity framework e efetivar no banco de dados
             _context.SaveChanges();
+        }
+
+        public void Update(Vendedores obj)
+        {
+            //Criar uma estrutura if para testar se o objeto existe no banco.
+            if(!_context.Vendedores.Any(x => x.Id == obj.Id))
+            {
+                throw new NotFoundException("Id não encontrado.");
+            }
+            //pode haver um conflito de captura de exceção de concorrencia
+            try
+            {
+                //atualizrr no banco
+                _context.Update(obj);
+                _context.SaveChanges();
+            }catch (DbUpdateConcurrencyException e)
+            {
+                throw new DbConcurrencyException(e.Message);
+            }
+            
         }
     }
 }
