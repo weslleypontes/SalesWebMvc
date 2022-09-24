@@ -45,6 +45,13 @@ namespace SalesWebMvc.Controllers
         // basta vc colocar ele aqui como  parametro o framework já faz isso pra gente
         public IActionResult Create(Vendedores vendedores)
         {
+            //teste para testar se o medelo foi validado
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new VendedorFormViewModel { Vendedores = vendedores, Departments = departments };
+                return View(viewModel);
+            }
             _vendedoresServices.Insert(vendedores);
             //feito isso vamos mostrar novamente a tela principal do meu   crud de vendedores
             // usar o Name of para melhora a manutenção do meu sistema poeqie se amanha eu mudar o mone, não vou precisar mudar 
@@ -110,7 +117,14 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Vendedores vendedores)
         {
-            if(id != vendedores.Id)
+            //teste para testar se o medelo foi validado
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new VendedorFormViewModel {Vendedores = vendedores, Departments = departments };
+                return View(viewModel);
+            }
+            if (id != vendedores.Id)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
             }
