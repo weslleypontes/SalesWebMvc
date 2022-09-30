@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.Enums;
+using Microsoft.EntityFrameworkCore;
 namespace SalesWebMvc.Data
 {
     public class SeedingService
@@ -15,11 +16,14 @@ namespace SalesWebMvc.Data
             _context = context;
         }
 
-        public void Seed()
+        public void SeedAsync()
         {
-            if (_context.Department.Any() ||
-                _context.Vendedores.Any() ||
-                _context.RegistroVendas.Any())
+            bool departamento =  _context.Department.Any();
+            bool vendecores =  _context.Vendedores.Any();
+            bool registroVendas = _context.RegistroVendas.Any();
+            if (departamento ||
+                vendecores ||
+                registroVendas)
             {
                 return; // DB has been seeded
             }
@@ -70,7 +74,7 @@ namespace SalesWebMvc.Data
             RegistroVendas r29 = new RegistroVendas(new int(), new DateTime(2018, 10, 23), 12000.0, StatusVendedor.Billed, s5);
             RegistroVendas r30 = new RegistroVendas(new int(), new DateTime(2018, 10, 12), 5000.0, StatusVendedor.Billed, s2);
 
-            _context.Department.AddRange(d1, d2, d3, d4);
+             _context.Department.AddRange(d1, d2, d3, d4);
 
             _context.Vendedores.AddRange(s1, s2, s3, s4, s5, s6);
 

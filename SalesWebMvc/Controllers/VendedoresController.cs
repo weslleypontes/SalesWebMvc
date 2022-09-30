@@ -5,6 +5,7 @@ using SalesWebMvc.Models.ViewModels;
 using System.Collections.Generic;
 using SalesWebMvc.Services.Exceptions;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace SalesWebMvc.Controllers
     
@@ -19,17 +20,17 @@ namespace SalesWebMvc.Controllers
             _vendedoresServices = vendedoresServices;
             _departmentService = departmentService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = _vendedoresServices.FindAll();
+            var list = await _vendedoresServices.FindAllAsync();
             return View(list);
         }
 
         // IActionResult é o tipo de retorno de todas as ações
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             //carregar os departamentos
-            var departments = _departmentService.FindAll();
+            var departments = await _departmentService.FindAllAsync();
             //instanciar o objeto do nosso View Model
             var viewModel = new VendedorFormViewModel { Departments = departments };
             return View(viewModel);
@@ -43,29 +44,29 @@ namespace SalesWebMvc.Controllers
         //no caso dessa operação Create ela vai reveber  o objeto vendedor que veio na requisição
         // para receber o objeto da requisição instanciar esse vendededor
         // basta vc colocar ele aqui como  parametro o framework já faz isso pra gente
-        public IActionResult Create(Vendedores vendedores)
+        public async Task<IActionResult> Create(Vendedores vendedores)
         {
             //teste para testar se o medelo foi validado
             if (!ModelState.IsValid)
             {
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsync();
                 var viewModel = new VendedorFormViewModel { Vendedores = vendedores, Departments = departments };
                 return View(viewModel);
             }
-            _vendedoresServices.Insert(vendedores);
+            await _vendedoresServices.InsertAsync(vendedores);
             //feito isso vamos mostrar novamente a tela principal do meu   crud de vendedores
             // usar o Name of para melhora a manutenção do meu sistema poeqie se amanha eu mudar o mone, não vou precisar mudar 
             // nada no nameof
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
             //pegar esse objeto que eu estou mandando deletar
-            var obj = _vendedoresServices.FindById(id.Value);
+            var obj = await _vendedoresServices.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
@@ -75,21 +76,21 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _vendedoresServices.Remove(id);
+            await _vendedoresServices.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
                 
         }
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
             //pegar esse objeto que eu estou mandando deletar
-            var obj = _vendedoresServices.FindById(id.Value);
+            var obj = await _vendedoresServices.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
@@ -97,30 +98,30 @@ namespace SalesWebMvc.Controllers
             return View(obj);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if(id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
-            var obj = _vendedoresServices.FindById(id.Value);
+            var obj = await _vendedoresServices.FindByIdAsync(id.Value);
             if(obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
-            List<Department> departments = _departmentService.FindAll();
+            List<Department> departments = await _departmentService.FindAllAsync();
             VendedorFormViewModel viewModel = new VendedorFormViewModel { Vendedores = obj, Departments = departments };
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Vendedores vendedores)
+        public async Task<IActionResult> Edit(int id, Vendedores vendedores)
         {
             //teste para testar se o medelo foi validado
             if (!ModelState.IsValid)
             {
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsync();
                 var viewModel = new VendedorFormViewModel {Vendedores = vendedores, Departments = departments };
                 return View(viewModel);
             }
@@ -130,7 +131,7 @@ namespace SalesWebMvc.Controllers
             }
             try
             {
-                _vendedoresServices.Update(vendedores);
+                await _vendedoresServices.UpdateAsync(vendedores);
                 return RedirectToAction(nameof(Index));
             }
             catch (NotFoundException e)

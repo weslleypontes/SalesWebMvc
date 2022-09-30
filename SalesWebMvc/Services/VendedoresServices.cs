@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Services.Exceptions;
+using System.Threading.Tasks;
 
 namespace SalesWebMvc.Services
 {
@@ -18,40 +19,41 @@ namespace SalesWebMvc.Services
             _context = context;
         }
          
-        public List<Vendedores> FindAll()
+        public async Task<List<Vendedores>> FindAllAsync()
         {
-            return _context.Vendedores.ToList();
+            return await _context.Vendedores.ToListAsync();
         }
         //metodo para inseir um novo cadastro
-        public void Insert(Vendedores obj)
+        public async Task InsertAsync(Vendedores obj)
         {
             //pegar o primeiro elemento do banco de dados e associar com o vendedor
            // obj.Department = _context.Department.First();
 
-            //para inserir
+            //para inserir na menoria
             _context.Add(obj);
-            //para confirmar 
-            _context.SaveChanges();
+            //para confirmar no banco
+            await _context.SaveChangesAsync();
         }
-        public Vendedores FindById(int id)
+        public async Task<Vendedores> FindByIdAsync(int id)
         {
-            return _context.Vendedores.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);
+            return await _context.Vendedores.Include(obj => obj.Department).FirstOrDefaultAsync(obj => obj.Id == id);
         }
 
-        public void Remove(int id)
+        public async Task RemoveAsync(int id)
         {
             //Primeiro pegar  o objeto
-            var obj =_context.Vendedores.Find(id);
+            var obj = await _context.Vendedores.FindAsync(id);
             //Remover o objeto do DbSte
             _context.Vendedores.Remove(obj);
             //Para confirmar o Entity framework e efetivar no banco de dados
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(Vendedores obj)
+        public async Task UpdateAsync(Vendedores obj)
         {
+            bool hasAny = await _context.Vendedores.AnyAsync(x => x.Id == obj.Id);
             //Criar uma estrutura if para testar se o objeto existe no banco.
-            if(!_context.Vendedores.Any(x => x.Id == obj.Id))
+            if (!hasAny)
             {
                 throw new NotFoundException("Id não encontrado.");
             }
@@ -60,7 +62,7 @@ namespace SalesWebMvc.Services
             {
                 //atualizrr no banco
                 _context.Update(obj);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }catch (DbUpdateConcurrencyException e)
             {
                 throw new DbConcurrencyException(e.Message);
