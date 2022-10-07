@@ -18,12 +18,10 @@ namespace SalesWebMvc.Data
 
         public void SeedAsync()
         {
-            bool departamento =  _context.Department.Any();
-            bool vendecores =  _context.Vendedores.Any();
-            bool registroVendas = _context.RegistroVendas.Any();
-            if (departamento ||
-                vendecores ||
-                registroVendas)
+            
+            if (_context.Department.Any() ||
+                _context.Vendedores.Any() ||
+                _context.RegistroVendas.Any())
             {
                 return; // DB has been seeded
             }
