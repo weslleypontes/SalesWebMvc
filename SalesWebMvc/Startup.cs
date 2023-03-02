@@ -48,6 +48,7 @@ namespace SalesWebMvc
             services.AddScoped<VendedoresServices>();
             services.AddScoped<DepartmentService>();
             services.AddScoped<RegistroVendasService>();
+            services.AddScoped<LoginModelService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,7 +84,7 @@ namespace SalesWebMvc
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Login}/{action=Index}/{id?}");
             });
         }
     }

@@ -62,5 +62,10 @@ namespace SalesWebMvc.Models
         {
             return Vendas.Where(rv => rv.Date >= inicio && rv.Date <= fim).Sum(rv => rv.Amount);
         }
+
+        public bool SenhaValida(string senha)
+        {
+            return Email == senha;
+        }
     }
 }
