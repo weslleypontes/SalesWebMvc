@@ -2,9 +2,11 @@
 using System;
 using System.Threading.Tasks;
 using SalesWebMvc.Services;
+using SalesWebMvc.Filters;
 
 namespace SalesWebMvc.Controllers
 {
+    [PaginaParaUsuarioLogado]
     public class RegistroVendasController : Controller
     {
 

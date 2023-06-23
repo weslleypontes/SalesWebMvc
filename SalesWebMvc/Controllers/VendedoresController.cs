@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using SalesWebMvc.Services.Exceptions;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using SalesWebMvc.Filters;
 
 namespace SalesWebMvc.Controllers
     
 {
+    [PaginaParaUsuarioLogado]
     public class VendedoresController : Controller
     {
         private readonly VendedoresServices _vendedoresServices;

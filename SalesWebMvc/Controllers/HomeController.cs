@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalesWebMvc.Filters;
 using SalesWebMvc.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace SalesWebMvc.Controllers
 {
+    [PaginaParaUsuarioLogado]
     public class HomeController : Controller
     {
         public IActionResult Index()

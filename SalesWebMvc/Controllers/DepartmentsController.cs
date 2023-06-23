@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
+using SalesWebMvc.Filters;
 using SalesWebMvc.Models;
 
 namespace SalesWebMvc.Controllers
 {
+    [PaginaParaUsuarioLogado]
     public class DepartmentsController : Controller
     {
         private readonly SalesWebMvcContext _context;
